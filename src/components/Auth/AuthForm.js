@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-
+import { useState, useRef ,useContext} from 'react';
+import AuthContext from '../../store/Auth-context';
 import classes from './AuthForm.module.css';
 
 const AuthForm = () => {
@@ -8,7 +8,7 @@ const AuthForm = () => {
 
   const passwordInputRef= useRef();
 
-
+  const authCtx=useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
 
   const switchAuthModeHandler = () => {
@@ -22,11 +22,11 @@ const AuthForm = () => {
     const enteredPassword=passwordInputRef.current.value;
 
     if(isLogin){
-       var url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAKqFeOETMUmLT1WIt6gLvnW1aXBuI3J0g';
+      var url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAKqFeOETMUmLT1WIt6gLvnW1aXBuI3J0g';
 
     }else{
       var url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAKqFeOETMUmLT1WIt6gLvnW1aXBuI3J0g';
-      
+    
     }
     fetch(url,{
         method:'POST',
@@ -39,22 +39,21 @@ const AuthForm = () => {
           'Content-Type': 'application/json'
         }
       }).then((res)=>{
-        if(res.ok ){
-          if( url=='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAKqFeOETMUmLT1WIt6gLvnW1aXBuI3J0g'){
-            alert('signup successfully...');
-          }
-          else{
-          alert('signin successfully...');
-          }
-
-        }else{
+        if(res.ok){
+          return res.json();
+        }
+        else{
           return res.json().then((data)=>{
-            alert(data.error.message);
+            let errorMessage='Authentication is failed';
+            throw new Error(errorMessage);
           })
         }
-      })
-
-  } 
+       
+  }).then(data=>{authCtx.login(data.idToken)})
+  .catch(err=>{
+    alert(err.message);
+  });
+};
 
   return (
     <section className={classes.auth}>
@@ -87,5 +86,4 @@ const AuthForm = () => {
     </section>
   );
 };
-
 export default AuthForm;
