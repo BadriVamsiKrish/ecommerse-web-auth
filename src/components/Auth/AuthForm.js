@@ -40,6 +40,7 @@ const AuthForm = () => {
         }
       }).then((res)=>{
         if(res.ok){
+<<<<<<< HEAD
           return res.json();
         }
         else{
@@ -54,6 +55,24 @@ const AuthForm = () => {
     alert(err.message);
   });
 };
+=======
+          if(url=='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAKqFeOETMUmLT1WIt6gLvnW1aXBuI3J0g'){
+          alert('sign up successfully...');
+          }
+          else{
+            alert('sign in successfully...');
+
+          }
+
+        }else{
+          return res.json().then((data)=>{
+            alert(data.error.message);
+          })
+        }
+      })
+
+  } 
+>>>>>>> 056534f0f82bfa1a0b7d9d7889df5ead53d9e94e
 
   return (
     <section className={classes.auth}>
