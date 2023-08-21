@@ -22,9 +22,13 @@ const AuthForm = () => {
     const enteredPassword=passwordInputRef.current.value;
 
     if(isLogin){
+       var url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAKqFeOETMUmLT1WIt6gLvnW1aXBuI3J0g';
 
     }else{
-      fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAKqFeOETMUmLT1WIt6gLvnW1aXBuI3J0g',{
+      var url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAKqFeOETMUmLT1WIt6gLvnW1aXBuI3J0g';
+      
+    }
+    fetch(url,{
         method:'POST',
         body:JSON.stringify({
           email:enteredEmail,
@@ -35,17 +39,21 @@ const AuthForm = () => {
           'Content-Type': 'application/json'
         }
       }).then((res)=>{
-        if(res.ok){
-          alert('signup successfully...');
+        if(res.ok ){
+          if( url=='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAKqFeOETMUmLT1WIt6gLvnW1aXBuI3J0g'){
+            alert('signup successfully...');
+          }
+          else{
+          alert('signin successfully...');
+          }
 
         }else{
           return res.json().then((data)=>{
-            console.log(data);
+            alert(data.error.message);
           })
         }
       })
 
-    }
   } 
 
   return (
